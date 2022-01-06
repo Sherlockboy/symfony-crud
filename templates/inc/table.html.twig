@@ -1,0 +1,22 @@
+{% if articles %}
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Article Title</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for article in articles %}
+        <tr>
+            <td>{{article}}</td>
+            <td>
+                <a href="/articles/1" class="btn btn-primary">Show</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No Articles!</p>
+{% endif %}

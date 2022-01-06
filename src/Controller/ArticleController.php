@@ -14,6 +14,8 @@ class ArticleController extends AbstractController
      */
     public function index()
     {
-        return $this->render('articles/index.html.twig');
+        $articles = ['Article 1', 'Article 2', 'Article 3'];
+
+        return $this->render('articles/index.html.twig', compact('articles'));
     }
 }
