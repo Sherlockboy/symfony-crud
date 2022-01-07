@@ -3,15 +3,17 @@
     <thead>
         <tr>
             <th>Article Title</th>
+            <th>Article Body</th>
             <th>Action</th>
         </tr>
     </thead>
     <tbody>
         {% for article in articles %}
         <tr>
-            <td>{{article}}</td>
+            <td>{{article.title}}</td>
+            <td>{{article.body}}</td>
             <td>
-                <a href="/articles/1" class="btn btn-primary">Show</a>
+                <a href="/articles/{{article.id}}" class="btn btn-primary">Show</a>
             </td>
         </tr>
         {% endfor %}

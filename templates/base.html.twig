@@ -15,9 +15,12 @@
 </head>
 
 <body>
-    <div class="container col-md-8">
+    <div class="container col-md-10">
         {{include('inc/navbar.html.twig')}}
+        
+        <div id="app" class="pt-3">
         {% block body %}{% endblock %}
+        </div>
 
         {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
