@@ -30,9 +30,9 @@ class ArticleController extends AbstractController
      */
     public function index()
     {
-        $articles = $this->repository->findAll();
-
-        return $this->render('articles/index.html.twig', compact('articles'));
+        return $this->render('articles/index.html.twig', [
+            'articles' => $this->repository->findAll()
+        ]);
     }
 
     /**
@@ -41,20 +41,7 @@ class ArticleController extends AbstractController
      */
     public function create(Request $request)
     {
-        $form = $this->createFormBuilder(new Article())
-            ->add('title', TextType::class, [
-                'required' => true,
-                'attr' => ['class' => 'form-control']
-            ])
-            ->add('body', TextareaType::class, [
-                'required' => false,
-                'attr' => ['class' => 'form-control']
-            ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Create',
-                'attr' => ['class' => 'btn btn-success mt-2']
-            ])
-            ->getForm();
+        $form = $this->generateArticleForm(new Article());
 
         $form->handleRequest($request);
 
@@ -66,8 +53,9 @@ class ArticleController extends AbstractController
             return $this->redirectToRoute('index_articles');
         }
 
-        return $this->render('articles/create.html.twig', [
-            'form' => $form->createView()
+        return $this->render('articles/form.html.twig', [
+            'form' => $form->createView(),
+            'title' => 'Create article'
         ]);
     }
 
@@ -77,9 +65,9 @@ class ArticleController extends AbstractController
      */
     public function show(int $id)
     {
-        $article = $this->repository->find($id);
-
-        return $this->render('articles/show.html.twig', compact('article'));
+        return $this->render('articles/show.html.twig', [
+            'article' => $this->repository->find($id)
+        ]);
     }
 
     /**
@@ -88,20 +76,7 @@ class ArticleController extends AbstractController
      */
     public function update(Request $request, int $id)
     {
-        $form = $this->createFormBuilder($this->repository->find($id))
-            ->add('title', TextType::class, [
-                'required' => true,
-                'attr' => ['class' => 'form-control']
-            ])
-            ->add('body', TextareaType::class, [
-                'required' => false,
-                'attr' => ['class' => 'form-control']
-            ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Update',
-                'attr' => ['class' => 'btn btn-success mt-2']
-            ])
-            ->getForm();
+        $form = $this->generateArticleForm($this->repository->find($id));
 
         $form->handleRequest($request);
 
@@ -111,8 +86,9 @@ class ArticleController extends AbstractController
             return $this->redirectToRoute('index_articles');
         }
 
-        return $this->render('articles/update.html.twig', [
-            'form' => $form->createView()
+        return $this->render('articles/form.html.twig', [
+            'form' => $form->createView(),
+            'title' => 'Update article'
         ]);
     }
 
@@ -129,19 +105,21 @@ class ArticleController extends AbstractController
         (new Response())->send();
     }
 
-    // /**
-    //  * @Route("/articles/save")
-    //  * @Method({"POST"})
-    //  */
-    // public function save(): Response
-    // {
-    //     $article = new Article();
-    //     $article->setTitle('Article 4');
-    //     $article->setBody('Body for Article 4');
-
-    //     $this->entityManager->persist($article);
-    //     $this->entityManager->flush();
-
-    //     return new Response("Saved article with id=" . $article->getId());
-    // }
+    private function generateArticleForm(Article $article)
+    {
+        return $this->createFormBuilder($article)
+            ->add('title', TextType::class, [
+                'required' => true,
+                'attr' => ['class' => 'form-control']
+            ])
+            ->add('body', TextareaType::class, [
+                'required' => false,
+                'attr' => ['class' => 'form-control']
+            ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Update',
+                'attr' => ['class' => 'btn btn-success mt-2']
+            ])
+            ->getForm();
+    }
 }
