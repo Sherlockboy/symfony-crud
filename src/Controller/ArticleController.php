@@ -82,6 +82,53 @@ class ArticleController extends AbstractController
         return $this->render('articles/show.html.twig', compact('article'));
     }
 
+    /**
+     * @Route("/articles/update/{id}", name="update_article")
+     * @Method({"GET", "POST"})
+     */
+    public function update(Request $request, int $id)
+    {
+        $form = $this->createFormBuilder($this->repository->find($id))
+            ->add('title', TextType::class, [
+                'required' => true,
+                'attr' => ['class' => 'form-control']
+            ])
+            ->add('body', TextareaType::class, [
+                'required' => false,
+                'attr' => ['class' => 'form-control']
+            ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Update',
+                'attr' => ['class' => 'btn btn-success mt-2']
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('index_articles');
+        }
+
+        return $this->render('articles/update.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/articles/delete/{id}")
+     * @Method({"DELETE"})
+     */
+    public function destroy(int $id)
+    {
+        $article = $this->repository->find($id);
+        $this->entityManager->remove($article);
+        $this->entityManager->flush();
+
+        (new Response())->send();
+    }
+
     // /**
     //  * @Route("/articles/save")
     //  * @Method({"POST"})
